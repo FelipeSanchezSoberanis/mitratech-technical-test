@@ -25,15 +25,13 @@ const WidgetCreationCard = ({ onWidgetCreated }: WidgetCreationCardProps): JSX.E
     setWidget({ name: "", description: "", price: 0 });
   };
 
-  const nameIsInvalid = useMemo(
-    () => widget.name.length < 3 || widget.name.length > 100,
-    [widget.name]
-  );
-  const descriptionIsInvalid = useMemo(
-    () => widget.description.length < 5 || widget.description.length > 1000,
-    [widget.description]
-  );
-  const priceIsInvalid = useMemo(() => widget.price < 1 || widget.price > 20000, [widget.price]);
+  const widgetValidity = useMemo(() => {
+    const nameIsInvalid = widget.name.length < 3 || widget.name.length > 100;
+    const descriptionIsInvalid = widget.description.length < 5 || widget.description.length > 1000;
+    const priceIsInvalid = widget.price < 1 || widget.price > 20000;
+    const isInvalid = nameIsInvalid && descriptionIsInvalid && priceIsInvalid;
+    return { isInvalid, nameIsInvalid, descriptionIsInvalid, priceIsInvalid };
+  }, [widget]);
 
   return (
     <Grid item xs={6}>
@@ -43,14 +41,14 @@ const WidgetCreationCard = ({ onWidgetCreated }: WidgetCreationCardProps): JSX.E
             <TextField
               onChange={(e) => setWidget((widget) => ({ ...widget, name: e.target.value }))}
               value={widget.name}
-              error={widget.name.length > 0 && nameIsInvalid}
+              error={widget.name.length > 0 && widgetValidity.nameIsInvalid}
               label="Name"
               variant="outlined"
             />
             <TextField
               onChange={(e) => setWidget((widget) => ({ ...widget, description: e.target.value }))}
               value={widget.description}
-              error={widget.description.length > 0 && descriptionIsInvalid}
+              error={widget.description.length > 0 && widgetValidity.descriptionIsInvalid}
               label="Description"
               variant="outlined"
             />
@@ -59,12 +57,12 @@ const WidgetCreationCard = ({ onWidgetCreated }: WidgetCreationCardProps): JSX.E
                 setWidget((widget) => ({ ...widget, price: stringToNumber(e.target.value) }))
               }
               value={widget.price}
-              error={widget.price > 0 && priceIsInvalid}
+              error={widget.price > 0 && widgetValidity.priceIsInvalid}
               label="Price"
               variant="outlined"
             />
             <Button
-              disabled={nameIsInvalid || descriptionIsInvalid || priceIsInvalid}
+              disabled={widgetValidity.isInvalid}
               onClick={handleCreateWidgetClick}
               variant="outlined"
             >

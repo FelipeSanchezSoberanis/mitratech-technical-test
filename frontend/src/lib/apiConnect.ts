@@ -11,7 +11,7 @@ export interface Widget {
 export const fetchAllWidgets = (): Promise<Widget[]> =>
   axios.get(`${BASE_URL}/v1/widgets`).then((response) => response.data);
 
-export const createWidget = (widget: Widget): Promise<Widget> =>
+export const saveWidget = (widget: Widget): Promise<Widget> =>
   axios.post(`${BASE_URL}/v1/widgets`, widget).then((response) => response.data);
 
 export const deleteWidget = (name: string): Promise<void> =>

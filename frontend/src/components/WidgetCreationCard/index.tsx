@@ -11,8 +11,9 @@ const stringToNumber = (input: string): number => Number(input.replace(/[^\d]+/g
 
 export type WidgetCreationCardProps = {
   onWidgetCreated?: () => any;
+  widgets: Widget[];
 };
-const WidgetCreationCard = ({ onWidgetCreated }: WidgetCreationCardProps): JSX.Element => {
+const WidgetCreationCard = ({ onWidgetCreated, widgets }: WidgetCreationCardProps): JSX.Element => {
   const [widget, setWidget] = useState<Widget>({
     name: "",
     description: "",
@@ -26,12 +27,15 @@ const WidgetCreationCard = ({ onWidgetCreated }: WidgetCreationCardProps): JSX.E
   };
 
   const widgetValidity = useMemo(() => {
-    const nameIsInvalid = widget.name.length < 3 || widget.name.length > 100;
+    const nameIsInvalid =
+      widget.name.length < 3 ||
+      widget.name.length > 100 ||
+      widgets.find((w) => w.name === widget.name) !== undefined;
     const descriptionIsInvalid = widget.description.length < 5 || widget.description.length > 1000;
     const priceIsInvalid = widget.price < 1 || widget.price > 20000;
     const isInvalid = nameIsInvalid || descriptionIsInvalid || priceIsInvalid;
     return { isInvalid, nameIsInvalid, descriptionIsInvalid, priceIsInvalid };
-  }, [widget]);
+  }, [widget, widgets]);
 
   return (
     <Grid item xs={6}>

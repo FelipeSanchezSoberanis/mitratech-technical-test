@@ -33,7 +33,7 @@ const WidgetList = (): JSX.Element => {
         Create new widget:
       </Typography>
       <Grid container justifyContent="center" spacing={4} sx={{ paddingRight: 4, width: "100%" }}>
-        <WidgetCreationCard onWidgetCreated={updateWidgetList} />
+        <WidgetCreationCard widgets={widgets} onWidgetCreated={updateWidgetList} />
       </Grid>
       <Typography sx={{ textAlign: "center" }} variant="h3">
         List of widgets:

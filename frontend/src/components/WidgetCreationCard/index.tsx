@@ -7,23 +7,21 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { Widget, saveWidget } from "../../lib/apiConnect";
 
-const stringToNumber = (input: string): number => Number(input.replace(/[^\d]+/g, ""));
-
 export type WidgetCreationCardProps = {
   onWidgetCreated?: () => any;
   widgets: Widget[];
 };
 const WidgetCreationCard = ({ onWidgetCreated, widgets }: WidgetCreationCardProps): JSX.Element => {
-  const [widget, setWidget] = useState<Widget>({
+  const [widget, setWidget] = useState<Omit<Widget, "price"> & { price: string }>({
     name: "",
     description: "",
-    price: 0
+    price: ""
   });
 
   const handleCreateWidgetClick = async () => {
-    await saveWidget(widget);
+    await saveWidget({ ...widget, price: Number(widget.price) });
     if (onWidgetCreated) onWidgetCreated();
-    setWidget({ name: "", description: "", price: 0 });
+    setWidget({ name: "", description: "", price: "" });
   };
 
   const widgetValidity = useMemo(() => {
@@ -32,7 +30,8 @@ const WidgetCreationCard = ({ onWidgetCreated, widgets }: WidgetCreationCardProp
       widget.name.length > 100 ||
       widgets.find((w) => w.name === widget.name) !== undefined;
     const descriptionIsInvalid = widget.description.length < 5 || widget.description.length > 1000;
-    const priceIsInvalid = widget.price < 1 || widget.price > 20000;
+    const price = Number(widget.price);
+    const priceIsInvalid = isNaN(price) || price < 1 || price > 20000;
     const isInvalid = nameIsInvalid || descriptionIsInvalid || priceIsInvalid;
     return { isInvalid, nameIsInvalid, descriptionIsInvalid, priceIsInvalid };
   }, [widget, widgets]);
@@ -57,11 +56,9 @@ const WidgetCreationCard = ({ onWidgetCreated, widgets }: WidgetCreationCardProp
               variant="outlined"
             />
             <TextField
-              onChange={(e) =>
-                setWidget((widget) => ({ ...widget, price: stringToNumber(e.target.value) }))
-              }
+              onChange={(e) => setWidget((widget) => ({ ...widget, price: e.target.value }))}
               value={widget.price}
-              error={widget.price > 0 && widgetValidity.priceIsInvalid}
+              error={widget.price.length > 0 && widgetValidity.priceIsInvalid}
               label="Price"
               variant="outlined"
             />

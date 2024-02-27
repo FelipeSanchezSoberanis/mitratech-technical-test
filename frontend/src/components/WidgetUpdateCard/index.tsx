@@ -9,34 +9,34 @@ import { Widget, saveWidget } from "../../lib/apiConnect";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 
-const stringToNumber = (input: string): number => Number(input.replace(/[^\d]+/g, ""));
-
 export type WidgetUpdateCardProps = {
   widgets: Widget[];
   onWidgetUpdated?: () => any;
 };
 const WidgetUpdateCard = ({ widgets, onWidgetUpdated }: WidgetUpdateCardProps): JSX.Element => {
-  const [widget, setWidget] = useState<Widget>({
+  const [widget, setWidget] = useState<Omit<Widget, "price"> & { price: string }>({
     name: "",
     description: "",
-    price: 0
+    price: ""
   });
 
   const handleUpdateWidgetClick = async () => {
-    await saveWidget(widget);
+    await saveWidget({ ...widget, price: Number(widget.price) });
     if (onWidgetUpdated) onWidgetUpdated();
-    setWidget({ name: "", description: "", price: 0 });
+    setWidget({ name: "", description: "", price: "" });
   };
 
   const handleSelectChange = (e: SelectChangeEvent) => {
     const name = e.target.value;
-    setWidget(widgets.find((w) => w.name === name)!);
+    const foundWidget = widgets.find((w) => w.name === name);
+    if (foundWidget) setWidget({ ...foundWidget, price: foundWidget.price.toString() });
   };
 
   const widgetValidity = useMemo(() => {
     const nameIsInvalid = widget.name.length < 3 || widget.name.length > 100;
     const descriptionIsInvalid = widget.description.length < 5 || widget.description.length > 1000;
-    const priceIsInvalid = widget.price < 1 || widget.price > 20000;
+    const price = Number(widget.price);
+    const priceIsInvalid = isNaN(price) || price < 1 || price > 20000;
     const isInvalid = nameIsInvalid || descriptionIsInvalid || priceIsInvalid;
     return { isInvalid, nameIsInvalid, descriptionIsInvalid, priceIsInvalid };
   }, [widget]);
@@ -61,11 +61,9 @@ const WidgetUpdateCard = ({ widgets, onWidgetUpdated }: WidgetUpdateCardProps): 
               variant="outlined"
             />
             <TextField
-              onChange={(e) =>
-                setWidget((widget) => ({ ...widget, price: stringToNumber(e.target.value) }))
-              }
+              onChange={(e) => setWidget((widget) => ({ ...widget, price: e.target.value }))}
               value={widget.price}
-              error={widget.price > 0 && widgetValidity.priceIsInvalid}
+              error={widget.price.length > 0 && widgetValidity.priceIsInvalid}
               label="Price"
               variant="outlined"
             />

@@ -26,4 +26,8 @@ public class WidgetService {
   public Widget saveWidget(Widget widget) {
     return WidgetRepository.save(widget);
   }
+
+  public void deleteWidget(String name) {
+    WidgetRepository.deleteById(name);
+  }
 }

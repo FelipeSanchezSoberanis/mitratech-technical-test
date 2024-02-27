@@ -13,3 +13,6 @@ export const fetchAllWidgets = (): Promise<Widget[]> =>
 
 export const createWidget = (widget: Widget): Promise<Widget> =>
   axios.post(`${BASE_URL}/v1/widgets`, widget).then((response) => response.data);
+
+export const deleteWidget = (name: string): Promise<void> =>
+  axios.delete(`${BASE_URL}/v1/widgets/${name}`).then((response) => response.data);

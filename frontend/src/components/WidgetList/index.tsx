@@ -33,7 +33,7 @@ const WidgetList = (): JSX.Element => {
       </Typography>
       <Grid container justifyContent="center" spacing={4} sx={{ paddingRight: 4, width: "100%" }}>
         {widgets.map((current, index) => (
-          <WidgetDisplay key={index} widget={current} />
+          <WidgetDisplay onWidgetDeleted={updateWidgetList} key={index} widget={current} />
         ))}
       </Grid>
     </Stack>

@@ -19,12 +19,10 @@ const WidgetCreationCard = ({ onWidgetCreated }: WidgetCreationCardProps): JSX.E
     price: 0
   });
 
-  const handleCreateWidgetClick = () => {
-    try {
-      createWidget(widget);
-      if (onWidgetCreated) onWidgetCreated();
-      setWidget({ name: "", description: "", price: 0 });
-    } catch (e) {}
+  const handleCreateWidgetClick = async () => {
+    await createWidget(widget);
+    if (onWidgetCreated) onWidgetCreated();
+    setWidget({ name: "", description: "", price: 0 });
   };
 
   const nameIsInvalid = useMemo(

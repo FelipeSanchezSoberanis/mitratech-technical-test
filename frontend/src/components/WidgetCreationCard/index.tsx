@@ -29,7 +29,7 @@ const WidgetCreationCard = ({ onWidgetCreated }: WidgetCreationCardProps): JSX.E
     const nameIsInvalid = widget.name.length < 3 || widget.name.length > 100;
     const descriptionIsInvalid = widget.description.length < 5 || widget.description.length > 1000;
     const priceIsInvalid = widget.price < 1 || widget.price > 20000;
-    const isInvalid = nameIsInvalid && descriptionIsInvalid && priceIsInvalid;
+    const isInvalid = nameIsInvalid || descriptionIsInvalid || priceIsInvalid;
     return { isInvalid, nameIsInvalid, descriptionIsInvalid, priceIsInvalid };
   }, [widget]);
 

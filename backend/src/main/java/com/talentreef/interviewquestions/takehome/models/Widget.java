@@ -17,6 +17,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder(toBuilder = true)
 public class Widget {
-
+  private String description;
   private String name;
+  private Double price;
 }

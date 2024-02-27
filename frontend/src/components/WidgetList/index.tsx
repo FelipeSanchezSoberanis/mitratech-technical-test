@@ -5,18 +5,29 @@ import Typography from "@mui/material/Typography";
 
 import WidgetDisplay from "../WidgetDisplay";
 import { fetchAllWidgets, Widget } from "../../lib/apiConnect";
+import WidgetCreationCard from "../WidgetCreationCard";
 
 const WidgetList = (): JSX.Element => {
   const [widgets, setWidgets] = useState<Widget[]>([]);
 
-  useEffect(() => {
+  const updateWidgetList = () => {
     fetchAllWidgets()
       .then(setWidgets)
       .catch((error) => console.error("Error fetching widgets", error));
+  };
+
+  useEffect(() => {
+    updateWidgetList();
   }, []);
 
   return (
     <Stack spacing={4} sx={{ margin: "auto", maxWidth: 900, paddingTop: "4em", width: "100%" }}>
+      <Typography sx={{ textAlign: "center" }} variant="h3">
+        Create new widget:
+      </Typography>
+      <Grid container justifyContent="center" spacing={4} sx={{ paddingRight: 4, width: "100%" }}>
+        <WidgetCreationCard onWidgetCreated={updateWidgetList} />
+      </Grid>
       <Typography sx={{ textAlign: "center" }} variant="h3">
         List of widgets:
       </Typography>

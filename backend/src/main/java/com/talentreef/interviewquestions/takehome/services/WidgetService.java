@@ -11,7 +11,6 @@ import org.springframework.util.Assert;
 @Slf4j
 @Service
 public class WidgetService {
-
   private final WidgetRepository WidgetRepository;
 
   @Autowired
@@ -22,5 +21,9 @@ public class WidgetService {
 
   public List<Widget> getAllWidgets() {
     return WidgetRepository.findAll();
+  }
+
+  public Widget saveWidget(Widget widget) {
+    return WidgetRepository.save(widget);
   }
 }
